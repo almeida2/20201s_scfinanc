@@ -45,7 +45,7 @@ public class ObtemDados {
 	public static void identificaArquivoExcel(String Path, String SheetName) {
 		try {
 			// Abre o arquivo Excel
-			System.out.println("Path = " + Path + " Sheet= " + SheetName);
+			//System.out.println("Path = " + Path + " Sheet= " + SheetName);
 			FileInputStream ExcelFile = new FileInputStream(Path);
 
 			// Acessa a planilha de dados
@@ -53,7 +53,6 @@ public class ObtemDados {
 			ExcelWSheet = ExcelWBook.getSheet(SheetName);
 
 		} catch (Exception e) {
-			System.out.println("erro no metodo setExcelFile = " + e.getMessage());
 			throw new RuntimeException(e.getMessage());
 		}
 	}
@@ -75,48 +74,44 @@ public class ObtemDados {
 			String CellData = String.valueOf(Cell.getStringCellValue());
 			return CellData;
 		} catch (Exception e) {
-			System.out
-					.println("Erro no metodo getCellData na linha = (" + RowNum + "," + ColNum + ") " + e.getMessage());
 			return "";
 		}
 	}
-
+	
 	public static ArrayList<TransacaoFinanceira> carregaDados() {
 		ArrayList<TransacaoFinanceira> extrato = new ArrayList<TransacaoFinanceira>();
 		TransacaoFinanceira tf;
-		for (int linha = 7; linha <= 59; linha++) {
+		int linha = 7;
+		while(getCellData(linha, 0) != "") {
 			String data = getCellData(linha, 0);// linha, coluna
 			String desc = getCellData(linha, 1);// linha, coluna
 			String docto = getCellData(linha, 2);// linha, coluna
 			String situa = getCellData(linha, 3);// linha, coluna
 			BigDecimal cred = new BigDecimal(0);
-			if (getCellData(linha, 4).equals("")) {
-				System.out.println("cred zerado =>" + linha );
-			} else {
+			BigDecimal deb = new BigDecimal(0);
+			BigDecimal sal = new BigDecimal(0);
+			if ((getCellData(linha, 4) != "")) {
 				cred = recuperaString(getCellData(linha, 4));
 			}
-			BigDecimal deb = new BigDecimal(0);
-			if (getCellData(linha, 5).equals("")) {
-				System.out.println("deb zerado");
-			} else {
+			
+			if (getCellData(linha, 5) != "") {
 				deb = recuperaString(getCellData(linha, 5));
 			}
-			BigDecimal sal = new BigDecimal(0);
-			if (getCellData(linha, 6).equals("")) {
-				System.out.println("saldo zerado");
-			} else {
+			if (getCellData(linha, 6) != "") {
 				sal = recuperaString(getCellData(linha, 6));
 			}
 
 			tf = new TransacaoFinanceira(data, desc, docto, situa, cred, deb, sal);
 			extrato.add(tf);
+			linha = linha +1;
 		}
 		return extrato;
 
 	}
-    public void mostra(ArrayList<TransacaoFinanceira> tf) {
-    	for (int linha = 0; linha <= 59; linha++) {
-    		System.out.println(tf.get(linha).toString());
+    public void mostra(ArrayList<TransacaoFinanceira> extrato) {
+    	
+    	for (TransacaoFinanceira tf : extrato) {
+    		System.out.println(tf);
     	}
     }
 	/**

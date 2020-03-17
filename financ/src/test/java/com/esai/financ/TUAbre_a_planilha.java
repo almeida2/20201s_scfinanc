@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
+import com.esai.financ.model.AnaliseDosDados;
 import com.esai.financ.model.ObtemDados;
 
 class TUAbre_a_planilha {
@@ -12,7 +13,7 @@ class TUAbre_a_planilha {
 	void ct01_abre_planilha_com_sucesso() {
 		
 		ObtemDados od = new ObtemDados();
-		String path = "D:\\20201s_temp\\20201s_scfinanc\\planilhaExtrato.xls";
+		String path = "E:\\20201s_temp\\20201s_scfinanc\\planilhaExtrato.xls";
 		String sheet = "plan1";
 		od.identificaArquivoExcel(path,sheet);
 	
@@ -26,7 +27,8 @@ class TUAbre_a_planilha {
 		String sheet = "plan1";
 		od.identificaArquivoExcel(path,sheet);
 		}catch(Exception e) {
-			System.out.println("erro = " + e.getMessage().substring(53, 104));
+			assertEquals ("O sistema não pode encontrar o caminho especificado",e.getMessage().substring(53, 104));
+			
 		}
 	
 		
@@ -37,12 +39,14 @@ class TUAbre_a_planilha {
 		//linha - coluna 0 data, descricao, docto, situacao, credito, debito, saldo
 		String data = od.getCellData(7,0);//linha, coluna
 		String descricao = od.getCellData(7,0);//linha, coluna
-		System.out.println(data);
 		assertTrue (data.toString().trim().equals("02/03/2020"));
 	}
+	
 	@Test
-	public void ct04_obtemLinha() {
+	public void ct05_obtemLinha() {
 		ObtemDados od = new ObtemDados();
-		od.mostra(od.carregaDados());
+		AnaliseDosDados ad = new AnaliseDosDados();
+		ad.agrupaPorCategoria(od.carregaDados());
+		
 	}
 }
